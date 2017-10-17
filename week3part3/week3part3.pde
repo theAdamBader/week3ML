@@ -1,4 +1,8 @@
-
+/*
+REFERENCE:
+Rebecca's Simple_Mouse_DraggedObject_2Inputs
+Adapated from https://processing.org/examples/mousefunctions.html by Rebecca Fiebrink
+*/
 
 import oscP5.*;
 import netP5.*;
