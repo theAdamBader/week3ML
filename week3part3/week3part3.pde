@@ -1,6 +1,7 @@
 import oscP5.*;
 import netP5.*;
 
+Enemy[] enemy= new Enemy[10];
 OscP5 oscP5;
 NetAddress dest;
 PFont f;
@@ -25,6 +26,10 @@ void setup() {
   x = width/2.0;
   y = height/2.0;
   ellipseMode(RADIUS);  
+
+  for (int i=0; i< 10; i++) {
+    enemy[i] = new Enemy(20);
+  }
 
   /* start oscP5, listening for incoming messages at port 12000 */
   oscP5 = new OscP5(this, 9000);
@@ -82,6 +87,7 @@ void menu() {
 
 void gameStart() {
   player();
+  enemies();
 }
 
 void player() {
@@ -103,6 +109,13 @@ void player() {
   // Draw the box
   ellipse(x, y, rad, rad);
 }
+
+void enemies() {
+  for (int i=0; i< 10; i++) {
+    enemy[i].run();
+  }
+}
+
 
 void sendOsc() {
   OscMessage msg = new OscMessage("/wek/inputs");
