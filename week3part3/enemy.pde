@@ -32,9 +32,10 @@ class Enemy{
     x -= xSpeed;
     y = y + random (-2, 2);
     
-    if (dist(x, y, mouseX, mouseY)<=25) {//calls the distance between two points the x and y axis
+    if (dist(x, y, xPos, yPos)<=25) {//calls the distance between two points the x and y axis
       gameState = 0;//when there is less or equal than 25 px between the player and enemy then game state 2 activates
-    }
+      x = 900;//the individual circle goes back 900px away from the playerSS
+  }
   }
   
   void reset() {  //looping the arrays using an if statement

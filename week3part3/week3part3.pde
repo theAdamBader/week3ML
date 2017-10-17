@@ -9,12 +9,12 @@ import netP5.*;
 
 OscP5 oscP5;
 NetAddress dest;
+Background bckgrnd;
 Enemy[] enemy= new Enemy[10];//(Adam) array of enemies
-PFont f;
 
 //Adam's input
-float x;
-float y;
+float xPos;
+float yPos;
 int rad = 20;
 int gameState = 0;
 int score= 0;//using a score system starting at 0 and a highscore to keep track of your highscore
@@ -29,13 +29,15 @@ void setup() {
   smooth();
 
   //Rebecca's input
-  x = width/2.0;
-  y = height/2.0;
+  xPos = width/2.0;
+  yPos = height/2.0;
   ellipseMode(RADIUS);  
 
   for (int i=0; i< 10; i++) {
     enemy[i] = new Enemy(20);//creating enemies with a radius size 20
   }
+  
+  bckgrnd = new Background();
 
   /* start oscP5, listening for incoming messages at port 12000 */
   oscP5 = new OscP5(this, 9000);
@@ -44,12 +46,14 @@ void setup() {
 
 void draw() {
   background(0);
+    
   if (gameState == 0) {//gameState 0
     menu();
     score = 0;
   }
   if (gameState == 1) {//Starts the game
-    gameStart();
+     bckgrnd.display();
+     gameStart();
   }
   
   //Send the OSC message with box current position
@@ -67,8 +71,8 @@ void mousePressed() {//Rebecca's inputs
 
 void mouseDragged() {//Rebecca's inputs
   if (locked) {
-    x = mouseX;
-    y = mouseY;
+    xPos = mouseX;
+    yPos = mouseY;
   }
 }
 
@@ -87,7 +91,7 @@ void menu() {//Adam (menu function)
   fill(255);
 
   text("Continuously sends box x and y position (2 inputs) to Wekinator\nUsing message /wek/inputs, to port 6448", 10, 30);
-  text("Ensure to 3 output before you start the game\nx=" + x + ", y=" + y, 10, 80);
+  text("Ensure to have 3 outputs before you start the game\nx=" + xPos + ", y=" + yPos, 10, 80);
   text("Highscore: "+highScore, 20, 200);//this tracks your highscore for whenever you go back to your main menu
 
   player();
@@ -110,8 +114,8 @@ void player() {//Adam (player function)
   fill(0, 200, 255);
 
   // Test if the cursor is over the player 
-  if (mouseX > x-rad && mouseX < x+rad && 
-    mouseY > y-rad && mouseY < y+rad) {
+  if (mouseX > xPos-rad && mouseX < xPos+rad && 
+    mouseY > yPos-rad && mouseY < yPos+rad) {
     overBox = true;  //if true then drag
     if (!locked) { //if not locked the colour is 0, 200, 255
       fill(0, 255, 255);
@@ -122,7 +126,7 @@ void player() {//Adam (player function)
     overBox = false;
   }
   // Draw the ellipse
-  ellipse(x, y, rad, rad);
+  ellipse(xPos, yPos, rad, rad);
 }
 
 void enemies() {//Adam (enemy function)
@@ -133,7 +137,7 @@ void enemies() {//Adam (enemy function)
 
 void sendOsc() {
   OscMessage msg = new OscMessage("/wek/inputs");
-  msg.add((float)x); 
-  msg.add((float)y);
+  msg.add((float)xPos); 
+  msg.add((float)yPos);
   oscP5.send(msg, dest);
 }
